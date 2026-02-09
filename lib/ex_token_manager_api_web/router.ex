@@ -9,6 +9,15 @@ defmodule ExTokenManagerApiWeb.Router do
     pipe_through :api
 
     get "/", WelcomeController, :index
+
+    scope "/tokens" do
+      get "/", TokensController, :index
+      post "/claim", TokensController, :claim
+      delete "/clear-active", TokensController, :clear_active
+
+      get "/:id", TokensController, :show
+      get "/:id/history", TokensController, :history
+    end
   end
 
   # Other scopes may use custom stacks.
