@@ -9,3 +9,5 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+Enum.each(1..100, fn _ -> ExTokenManagerApi.Repo.insert!(%ExTokenManagerApi.Tokens.Token{}) end)

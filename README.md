@@ -23,3 +23,8 @@ mix ecto.gen.migration add_users_table
 
 mix ecto.migrate
 ```
+
+## Running Seed
+```bash
+mix run priv/repo/seeds.exs
+```
