@@ -1,23 +1,14 @@
 defmodule ExTokenManagerApiWeb.Router do
   use ExTokenManagerApiWeb, :router
 
-  pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {ExTokenManagerApiWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/", ExTokenManagerApiWeb do
-    pipe_through :browser
+  scope "/api", ExTokenManagerApiWeb do
+    pipe_through :api
 
-    get "/", PageController, :home
+    get "/", WelcomeController, :index
   end
 
   # Other scopes may use custom stacks.
@@ -35,7 +26,7 @@ defmodule ExTokenManagerApiWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through [:fetch_session, :protect_from_forgery]
 
       live_dashboard "/dashboard", metrics: ExTokenManagerApiWeb.Telemetry
     end
