@@ -1,9 +1,28 @@
 defmodule ExTokenManagerApi.Tokens do
   import Ecto.Query
 
+  alias Ecto.Multi
+
   alias ExTokenManagerApi.Repo
   alias ExTokenManagerApi.Tokens.Token
   alias ExTokenManagerApi.Tokens.TokenUsageHistory
+
+  def clear_active_and_release_histories do
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    Multi.new()
+    |> Multi.update_all(
+      :released_tokens,
+      from(t in Token, where: t.status == "ACTIVE"),
+      set: [status: "AVAILABLE", current_user_id: nil, updated_at: now]
+    )
+    |> Multi.update_all(
+      :released_histories,
+      from(h in TokenUsageHistory, where: is_nil(h.released_at)),
+      set: [released_at: now]
+    )
+    |> Repo.transaction()
+  end
 
   def index(params \\ %{}) do
     Token
@@ -32,14 +51,20 @@ defmodule ExTokenManagerApi.Tokens do
       active_count = Repo.one(from t in Token, where: t.status == "ACTIVE", select: count(t.id))
 
       if active_count >= 100 do
-        oldest = Repo.one(from t in Token, where: t.status == "ACTIVE", order_by: [asc: :updated_at], limit: 1)
-        release_token(oldest)
+        Repo.one(
+          from t in Token, where: t.status == "ACTIVE", order_by: [asc: :updated_at], limit: 1
+        )
+        |> release_token()
       end
 
       token = Repo.one(from t in Token, where: t.status == "AVAILABLE", limit: 1)
 
       if token do
-        Repo.insert!(%TokenUsageHistory{token_id: token.id, user_id: user_id, activated_at:  DateTime.utc_now() |> DateTime.truncate(:second)})
+        Repo.insert!(%TokenUsageHistory{
+          token_id: token.id,
+          user_id: user_id,
+          activated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+        })
 
         token
         |> Token.changeset(%{status: "ACTIVE", current_user_id: user_id})
@@ -53,7 +78,7 @@ defmodule ExTokenManagerApi.Tokens do
 
   def release_token(token) do
     from(h in TokenUsageHistory, where: h.token_id == ^token.id and is_nil(h.released_at))
-    |> Repo.update_all(set: [released_at:  DateTime.utc_now() |> DateTime.truncate(:second)])
+    |> Repo.update_all(set: [released_at: DateTime.utc_now() |> DateTime.truncate(:second)])
 
     token
     |> Token.changeset(%{status: "AVAILABLE", current_user_id: nil})

@@ -3,8 +3,16 @@ defmodule ExTokenManagerApiWeb.TokensController do
 
   alias ExTokenManagerApi.Tokens
 
+  def clear_active(conn, _params) do
+    with {:ok, results} <- Tokens.clear_active_and_release_histories() do
+      conn
+      |> put_status(:ok)
+      |> render(:clear_active, results: results)
+    end
+  end
+
   def claim(conn, %{"user_id" => user_id}) do
-    with {:ok, token} <-  Tokens.claim(user_id) do
+    with {:ok, token} <- Tokens.claim(user_id) do
       conn
       |> put_status(:created)
       |> render(:show, token: token)
