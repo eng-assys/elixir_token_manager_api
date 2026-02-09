@@ -3,6 +3,14 @@ defmodule ExTokenManagerApiWeb.TokensController do
 
   alias ExTokenManagerApi.Tokens
 
+  def claim(conn, %{"user_id" => user_id}) do
+    with {:ok, token} <-  Tokens.claim(user_id) do
+      conn
+      |> put_status(:created)
+      |> render(:show, token: token)
+    end
+  end
+
   def index(conn, params) do
     with {:ok, tokens} <- {:ok, Tokens.index(params)} do
       conn
