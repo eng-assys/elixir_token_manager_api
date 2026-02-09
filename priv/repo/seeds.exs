@@ -16,20 +16,21 @@ alias ExTokenManagerApi.Tokens.{Token, TokenUsageHistory}
 Repo.delete_all(TokenUsageHistory)
 Repo.delete_all(Token)
 
-IO.puts "Generating 100 tokens..."
+IO.puts("Generating 100 tokens...")
 
 for _ <- 1..10 do
   user_id = Ecto.UUID.generate()
 
-  token = Repo.insert!(%Token{
-    status: "ACTIVE",
-    current_user_id: user_id
-  })
+  token =
+    Repo.insert!(%Token{
+      status: "ACTIVE",
+      current_user_id: user_id
+    })
 
   Repo.insert!(%TokenUsageHistory{
     token_id: token.id,
     user_id: user_id,
-    activated_at: DateTime.utc_now() |> DateTime.truncate(:second),
+    activated_at: DateTime.utc_now() |> DateTime.truncate(:second)
   })
 end
 
@@ -40,6 +41,6 @@ for _ <- 1..90 do
   })
 end
 
-IO.puts "Seeds succeeded!"
-IO.puts "- 10 active tokens with history."
-IO.puts "- 90 available tokens."
+IO.puts("Seeds succeeded!")
+IO.puts("- 10 active tokens with history.")
+IO.puts("- 90 available tokens.")
