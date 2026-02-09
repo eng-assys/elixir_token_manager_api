@@ -10,7 +10,8 @@ defmodule ExTokenManagerApi.Application do
     children = [
       ExTokenManagerApiWeb.Telemetry,
       ExTokenManagerApi.Repo,
-      {DNSCluster, query: Application.get_env(:ex_token_manager_api, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:ex_token_manager_api, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ExTokenManagerApi.PubSub},
       # Start a worker by calling: ExTokenManagerApi.Worker.start_link(arg)
       # {ExTokenManagerApi.Worker, arg},

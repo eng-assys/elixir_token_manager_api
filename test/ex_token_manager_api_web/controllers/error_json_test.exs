@@ -2,7 +2,9 @@ defmodule ExTokenManagerApiWeb.ErrorJSONTest do
   use ExTokenManagerApiWeb.ConnCase, async: true
 
   test "renders 404" do
-    assert ExTokenManagerApiWeb.ErrorJSON.render("404.json", %{}) == %{errors: %{detail: "Not Found"}}
+    assert ExTokenManagerApiWeb.ErrorJSON.render("404.json", %{}) == %{
+             errors: %{detail: "Not Found"}
+           }
   end
 
   test "renders 500" do
