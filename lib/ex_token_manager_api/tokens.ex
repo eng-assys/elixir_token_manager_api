@@ -4,13 +4,14 @@ defmodule ExTokenManagerApi.Tokens do
   alias ExTokenManagerApi.Repo
   alias ExTokenManagerApi.Tokens.Token
 
-  def list_tokens(params \\ %{}) do
+  def index(params \\ %{}) do
     Token
     |> filter_by_status(params["status"])
     |> Repo.all()
   end
 
   defp filter_by_status(query, status) when status in [nil, ""], do: query
+
   defp filter_by_status(query, status) do
     from(t in query, where: t.status == ^status)
   end
