@@ -2,7 +2,7 @@ defmodule ExTokenManagerApi.Tokens.Token do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExTokenManagerApi.Tokens.History
+  alias ExTokenManagerApi.Tokens.TokenUsageHistory
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -11,7 +11,7 @@ defmodule ExTokenManagerApi.Tokens.Token do
     field :status, :string, default: "AVAILABLE"
     field :current_user_id, :binary_id
 
-    has_many :history, History
+    has_many :history, TokenUsageHistory
     timestamps()
   end
 
