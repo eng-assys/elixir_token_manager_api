@@ -19,7 +19,6 @@ defmodule ExTokenManagerApi.Application do
 
       # Custom Worker to handle token release after timeout
       ExTokenManagerApi.Worker,
-
       ExTokenManagerApiWeb.Endpoint
     ]
 
