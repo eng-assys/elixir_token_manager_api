@@ -22,4 +22,19 @@ defmodule ExTokenManagerApiWeb.TokensJSON do
       inserted_at: token.inserted_at
     }
   end
+
+  def histories(%{token_histories: token_histories}) do
+    %{
+      items: for(token_history <- token_histories, do: history_item(token_history))
+    }
+  end
+
+  defp history_item(token_history) do
+    %{
+      token_id: token_history.token_id,
+      user_id: token_history.user_id,
+      activated_at: token_history.activated_at,
+      released_at: token_history.released_at
+    }
+  end
 end

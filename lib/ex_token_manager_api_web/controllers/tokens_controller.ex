@@ -18,4 +18,12 @@ defmodule ExTokenManagerApiWeb.TokensController do
       |> render(:show, token: token)
     end
   end
+
+  def history(conn, %{"id" => id}) do
+    with {:ok, token_histories} <- {:ok, Tokens.show_histories!(id)} do
+      conn
+      |> put_status(:ok)
+      |> render(:histories, token_histories: token_histories)
+    end
+  end
 end

@@ -3,6 +3,7 @@ defmodule ExTokenManagerApi.Tokens do
 
   alias ExTokenManagerApi.Repo
   alias ExTokenManagerApi.Tokens.Token
+  alias ExTokenManagerApi.Tokens.TokenUsageHistory
 
   def index(params \\ %{}) do
     Token
@@ -17,4 +18,12 @@ defmodule ExTokenManagerApi.Tokens do
   end
 
   def show!(id), do: Repo.get!(Token, id)
+
+  def show_histories!(id) do
+    from(h in TokenUsageHistory,
+      where: h.token_id == ^id,
+      order_by: [desc: h.activated_at]
+    )
+    |> Repo.all()
+  end
 end
