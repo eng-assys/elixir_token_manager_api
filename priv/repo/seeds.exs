@@ -32,6 +32,8 @@ for _ <- 1..10 do
     user_id: user_id,
     activated_at: DateTime.utc_now() |> DateTime.truncate(:second)
   })
+
+  Process.send_after(ExTokenManagerApi.Worker, {:release, token.id}, 2 * 60 * 1000)
 end
 
 for _ <- 1..90 do
