@@ -17,26 +17,28 @@ defmodule ExTokenManagerWeb.TokenControllerTest do
     conn = post(conn, ~p"/api/tokens/claim", %{"user_id" => user_id})
 
     assert %{
-      "id" => _id,
-      "status" =>  "ACTIVE",
-      "inserted_at" => _inserted_at,
-      "current_user_id" => ^user_id,
-      "updated_at" => _updated_at
-      } = json_response(conn, :created)
+             "id" => _id,
+             "status" => "ACTIVE",
+             "inserted_at" => _inserted_at,
+             "current_user_id" => ^user_id,
+             "updated_at" => _updated_at
+           } = json_response(conn, :created)
 
     assert length(Tokens.index(%{"status" => "ACTIVE"})) == 1
   end
-
 
   test "POST /tokens/claim when exceed 100 activated tokens should get older one", %{conn: conn} do
     user_id = Ecto.UUID.generate()
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    {_count, _} = Repo.update_all(Token, set: [
-      status: "ACTIVE",
-      current_user_id: user_id,
-      updated_at: now
-    ])
+    {_count, _} =
+      Repo.update_all(Token,
+        set: [
+          status: "ACTIVE",
+          current_user_id: user_id,
+          updated_at: now
+        ]
+      )
 
     new_user = Ecto.UUID.generate()
     conn = post(conn, ~p"/api/tokens/claim", %{"user_id" => new_user})
