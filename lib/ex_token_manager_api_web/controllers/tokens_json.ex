@@ -12,4 +12,14 @@ defmodule ExTokenManagerApiWeb.TokensJSON do
       inserted_at: token.inserted_at
     }
   end
+
+  def show(%{token: token}) do
+    %{
+      id: token.id,
+      status: token.status,
+      current_user_id: token.current_user_id,
+      updated_at: token.updated_at,
+      inserted_at: token.inserted_at
+    }
+  end
 end

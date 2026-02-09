@@ -15,4 +15,6 @@ defmodule ExTokenManagerApi.Tokens do
   defp filter_by_status(query, status) do
     from(t in query, where: t.status == ^status)
   end
+
+  def show!(id), do: Repo.get!(Token, id)
 end

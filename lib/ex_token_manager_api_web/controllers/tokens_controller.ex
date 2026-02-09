@@ -10,4 +10,12 @@ defmodule ExTokenManagerApiWeb.TokensController do
       |> render(:index, tokens: tokens)
     end
   end
+
+  def show(conn, %{"id" => id}) do
+    with {:ok, token} <- {:ok, Tokens.show!(id)} do
+      conn
+      |> put_status(:ok)
+      |> render(:show, token: token)
+    end
+  end
 end
