@@ -13,4 +13,12 @@ defmodule ExTokenManagerApi.TokenTest do
     assert updated_token.status == "AVAILABLE"
     assert is_nil(updated_token.current_user_id)
   end
+
+  test "automatic expiration via message" do
+    token = Repo.insert!(%Token{status: "ACTIVE", current_user_id: Ecto.UUID.generate()})
+
+    Tokens.release_token(token)
+
+    assert Tokens.show!(token.id).status == "AVAILABLE"
+  end
 end
