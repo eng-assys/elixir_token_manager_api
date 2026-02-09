@@ -16,6 +16,10 @@ defmodule ExTokenManagerApi.Application do
       # Start a worker by calling: ExTokenManagerApi.Worker.start_link(arg)
       # {ExTokenManagerApi.Worker, arg},
       # Start to serve requests, typically the last entry
+
+      # Custom Worker to handle token release after timeout
+      ExTokenManagerApi.Worker,
+
       ExTokenManagerApiWeb.Endpoint
     ]
 
