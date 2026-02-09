@@ -1,7 +1,9 @@
-defmodule ExTokenManagerApi.Tokens.History do
+defmodule ExTokenManagerApi.Tokens.TokenUsageHistory do
   use Ecto.Schema
 
   alias ExTokenManagerApi.Tokens.Token
+
+  @foreign_key_type :binary_id
 
   schema "token_usage_histories" do
     field :user_id, :binary_id
