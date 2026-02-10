@@ -7,17 +7,7 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
 * Update Dependencies `mix deps.get`
-
-## Learn more
-
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
 
 ## Generate Database Migration
 ```bash
@@ -35,3 +25,6 @@ mix run priv/repo/seeds.exs
 ```bash
 mix deps.compile phoenix_swagger
 ```
+
+## Access Swagger Documentation
+[Swagger](http://localhost:4000/api/swagger)
