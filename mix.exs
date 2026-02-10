@@ -10,7 +10,8 @@ defmodule ExTokenManagerApi.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      compilers: [:phoenix_live_view] ++ Mix.compilers(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers() ++ [:phoenix_swagger],
+      docs: docs(),
       listeners: [Phoenix.CodeReloader]
     ]
   end
@@ -28,6 +29,13 @@ defmodule ExTokenManagerApi.MixProject do
   def cli do
     [
       preferred_envs: [precommit: :test]
+    ]
+  end
+
+  defp docs do
+    [
+      router: ExTokenManagerApiWeb.Router,
+      endpoint: ExTokenManagerApiWeb.Endpoint
     ]
   end
 
@@ -54,7 +62,9 @@ defmodule ExTokenManagerApi.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.5"}
     ]
   end
 
