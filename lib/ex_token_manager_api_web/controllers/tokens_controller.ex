@@ -6,6 +6,19 @@ defmodule ExTokenManagerApiWeb.TokensController do
 
   def swagger_definitions do
     %{
+      ClaimRequest: swagger_schema do
+        title "Claim Request"
+        properties do
+          user_id :string, "Claimant User's UUID", required: true
+        end
+      end,
+      ClearResponse: swagger_schema do
+        title "Clear Response"
+        properties do
+          tokens_affected :integer, "Reset Tokens amount"
+          history_closed :integer, "Closed History records amount"
+        end
+      end,
       Token:
         swagger_schema do
           title("Token")
@@ -14,18 +27,32 @@ defmodule ExTokenManagerApiWeb.TokensController do
           properties do
             id(:string, "Token's UUID", format: :uuid)
             status(:string, "Status (ACTIVE/AVAILABLE)", example: "ACTIVE")
-            user_id(:string, "Current User ID", format: :uuid)
+            current_user_id(:string, "Current User ID", format: :uuid)
+            inserted_at(:string, "Insertion timestamp", format: "date-time")
+            updated_at(:string, "Last update timestamp", format: "date-time")
           end
+        end,
+      TokenList: swagger_schema do
+        title "Tokens List"
+        type :array
+        items Schema.ref(:Token)
+      end,
+      TokenUsageHistory: swagger_schema do
+        title "Token Usage History"
+        properties do
+          id(:integer, "History record's id", format: :id, example: 1)
+          token_id(:string, "Associated Token's UUID", format: :uuid)
+          activated_at(:string, "Activation timestamp", format: "date-time")
+          released_at(:string, "Release timestamp", format: "date-time")
+          user_id(:string, "User ID who claimed the token", format: :uuid)
         end
+      end,
+      TokenUsageHistoryList: swagger_schema do
+        title "Tokens Usage History List"
+        type :array
+        items Schema.ref(:TokenUsageHistory)
+      end,
     }
-  end
-
-  def clear_active(conn, _params) do
-    with {:ok, results} <- Tokens.clear_active_and_release_histories() do
-      conn
-      |> put_status(:ok)
-      |> render(:clear_active, results: results)
-    end
   end
 
   def claim(conn, %{"user_id" => user_id}) do
@@ -33,6 +60,14 @@ defmodule ExTokenManagerApiWeb.TokensController do
       conn
       |> put_status(:created)
       |> render(:show, token: token)
+    end
+  end
+
+  def clear_active(conn, _params) do
+    with {:ok, results} <- Tokens.clear_active_and_release_histories() do
+      conn
+      |> put_status(:ok)
+      |> render(:clear_active, results: results)
     end
   end
 
@@ -60,7 +95,7 @@ defmodule ExTokenManagerApiWeb.TokensController do
       id(:path, :string, "Token's UUID", required: true)
     end
 
-    response(200, "OK", Schema.ref(:Token))
+    response(200, "OK", Schema.ref(:TokenUsageHistoryList))
   end
 
   def history(conn, %{"id" => id}) do

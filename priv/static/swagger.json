@@ -5,12 +5,81 @@
   },
   "host": "localhost:4000",
   "definitions": {
+    "TokenUsageHistory": {
+      "properties": {
+        "activated_at": {
+          "description": "Activation timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "description": "History record's id",
+          "example": 1,
+          "format": "id",
+          "type": "integer"
+        },
+        "released_at": {
+          "description": "Release timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "token_id": {
+          "description": "Associated Token's UUID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID who claimed the token",
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "title": "Token Usage History",
+      "type": "object"
+    },
+    "ClaimRequest": {
+      "properties": {
+        "user_id": {
+          "description": "Claimant User's UUID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id"
+      ],
+      "title": "Claim Request",
+      "type": "object"
+    },
+    "ClearResponse": {
+      "properties": {
+        "history_closed": {
+          "description": "Closed History records amount",
+          "type": "integer"
+        },
+        "tokens_affected": {
+          "description": "Reset Tokens amount",
+          "type": "integer"
+        }
+      },
+      "title": "Clear Response",
+      "type": "object"
+    },
     "Token": {
       "description": "A token to access an resource",
       "properties": {
+        "current_user_id": {
+          "description": "Current User ID",
+          "format": "uuid",
+          "type": "string"
+        },
         "id": {
           "description": "Token's UUID",
           "format": "uuid",
+          "type": "string"
+        },
+        "inserted_at": {
+          "description": "Insertion timestamp",
+          "format": "date-time",
           "type": "string"
         },
         "status": {
@@ -18,14 +87,28 @@
           "example": "ACTIVE",
           "type": "string"
         },
-        "user_id": {
-          "description": "Current User ID",
-          "format": "uuid",
+        "updated_at": {
+          "description": "Last update timestamp",
+          "format": "date-time",
           "type": "string"
         }
       },
       "title": "Token",
       "type": "object"
+    },
+    "TokenList": {
+      "items": {
+        "$ref": "#/definitions/Token"
+      },
+      "title": "Tokens List",
+      "type": "array"
+    },
+    "TokenUsageHistoryList": {
+      "items": {
+        "$ref": "#/definitions/TokenUsageHistory"
+      },
+      "title": "Tokens Usage History List",
+      "type": "array"
     }
   },
   "paths": {
@@ -46,7 +129,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Token"
+              "$ref": "#/definitions/TokenUsageHistoryList"
             }
           }
         },

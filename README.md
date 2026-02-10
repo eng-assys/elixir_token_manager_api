@@ -30,3 +30,8 @@ mix ecto.migrate
 ```bash
 mix run priv/repo/seeds.exs
 ```
+
+## Compile Swagger docs
+```bash
+mix deps.compile phoenix_swagger
+```
