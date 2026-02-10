@@ -6,19 +6,26 @@ defmodule ExTokenManagerApiWeb.TokensController do
 
   def swagger_definitions do
     %{
-      ClaimRequest: swagger_schema do
-        title "Claim Request"
-        properties do
-          user_id :string, "Claimant User's UUID", required: true
-        end
-      end,
-      ClearResponse: swagger_schema do
-        title "Clear Response"
-        properties do
-          tokens_affected :integer, "Reset Tokens amount"
-          history_closed :integer, "Closed History records amount"
-        end
-      end,
+      ClaimRequest:
+        swagger_schema do
+          title("Claim Request")
+
+          properties do
+            user_id(:string, "Claimant User's UUID",
+              required: true,
+              example: "123e4567-e89b-12d3-a456-426614174000"
+            )
+          end
+        end,
+      ClearResponse:
+        swagger_schema do
+          title("Clear Response")
+
+          properties do
+            tokens_affected(:integer, "Reset Tokens amount")
+            history_closed(:integer, "Closed History records amount")
+          end
+        end,
       Token:
         swagger_schema do
           title("Token")
@@ -32,37 +39,43 @@ defmodule ExTokenManagerApiWeb.TokensController do
             updated_at(:string, "Last update timestamp", format: "date-time")
           end
         end,
-      TokenList: swagger_schema do
-        title "Tokens List"
-        type :array
-        items Schema.ref(:Token)
-      end,
-      TokenUsageHistory: swagger_schema do
-        title "Token Usage History"
-        properties do
-          id(:integer, "History record's id", format: :id, example: 1)
-          token_id(:string, "Associated Token's UUID", format: :uuid)
-          activated_at(:string, "Activation timestamp", format: "date-time")
-          released_at(:string, "Release timestamp", format: "date-time")
-          user_id(:string, "User ID who claimed the token", format: :uuid)
+      TokenList:
+        swagger_schema do
+          title("Tokens List")
+          type(:array)
+          items(Schema.ref(:Token))
+        end,
+      TokenUsageHistory:
+        swagger_schema do
+          title("Token Usage History")
+
+          properties do
+            id(:integer, "History record's id", format: :id, example: 1)
+            token_id(:string, "Associated Token's UUID", format: :uuid)
+            activated_at(:string, "Activation timestamp", format: "date-time")
+            released_at(:string, "Release timestamp", format: "date-time")
+            user_id(:string, "User ID who claimed the token", format: :uuid)
+          end
+        end,
+      TokenUsageHistoryList:
+        swagger_schema do
+          title("Tokens Usage History List")
+          type(:array)
+          items(Schema.ref(:TokenUsageHistory))
         end
-      end,
-      TokenUsageHistoryList: swagger_schema do
-        title "Tokens Usage History List"
-        type :array
-        items Schema.ref(:TokenUsageHistory)
-      end,
     }
   end
 
   swagger_path :claim do
-    post "/api/tokens/claim"
-    summary "Claim a token"
-    description "Allocate a token available or recycle the oldest one if the limit is reached."
+    post("/api/tokens/claim")
+    summary("Claim a token")
+    description("Allocate a token available or recycle the oldest one if the limit is reached.")
+
     parameters do
-      body :body, Schema.ref(:ClaimRequest), "User Data", required: true
+      body(:body, Schema.ref(:ClaimRequest), "User Data", required: true)
     end
-    response 201, "Token Claimed with success", Schema.ref(:Token)
+
+    response(201, "Token Claimed with success", Schema.ref(:Token))
   end
 
   def claim(conn, %{"user_id" => user_id}) do
@@ -74,10 +87,10 @@ defmodule ExTokenManagerApiWeb.TokensController do
   end
 
   swagger_path :clear_active do
-    delete "/api/tokens/clear-active"
-    summary "Clear Active Tokens"
-    description "Release all Active Tokens and close their usage history records."
-    response 200, "Tokens Cleared with success", Schema.ref(:ClearResponse)
+    delete("/api/tokens/clear-active")
+    summary("Clear Active Tokens")
+    description("Release all Active Tokens and close their usage history records.")
+    response(200, "Tokens Cleared with success", Schema.ref(:ClearResponse))
   end
 
   def clear_active(conn, _params) do
@@ -89,10 +102,10 @@ defmodule ExTokenManagerApiWeb.TokensController do
   end
 
   swagger_path :index do
-    get "/api/tokens"
-    summary "Listar All Tokens"
-    description "Return a List of all registered tokens, with optional filtering by status"
-    response 200, "OK", Schema.ref(:TokenList)
+    get("/api/tokens")
+    summary("Listar All Tokens")
+    description("Return a List of all registered tokens, with optional filtering by status")
+    response(200, "OK", Schema.ref(:TokenList))
   end
 
   def index(conn, params) do
