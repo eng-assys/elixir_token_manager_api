@@ -1,0 +1,61 @@
+{
+  "info": {
+    "version": "1.0.0",
+    "title": "Token Manager API"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "Token": {
+      "description": "A token to access an resource",
+      "properties": {
+        "id": {
+          "description": "Token's UUID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status (ACTIVE/AVAILABLE)",
+          "example": "ACTIVE",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "Current User ID",
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "title": "Token",
+      "type": "object"
+    }
+  },
+  "paths": {
+    "/api/tokens/{id}/history": {
+      "get": {
+        "description": "",
+        "operationId": "ExTokenManagerApiWeb.TokensController.history",
+        "parameters": [
+          {
+            "description": "Token's UUID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        },
+        "summary": "List the history of a token",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0"
+}
