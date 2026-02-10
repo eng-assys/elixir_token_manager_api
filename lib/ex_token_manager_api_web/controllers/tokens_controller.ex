@@ -1,7 +1,24 @@
 defmodule ExTokenManagerApiWeb.TokensController do
   use ExTokenManagerApiWeb, :controller
+  use PhoenixSwagger
 
   alias ExTokenManagerApi.Tokens
+
+  def swagger_definitions do
+    %{
+      Token:
+        swagger_schema do
+          title("Token")
+          description("A token to access an resource")
+
+          properties do
+            id(:string, "Token's UUID", format: :uuid)
+            status(:string, "Status (ACTIVE/AVAILABLE)", example: "ACTIVE")
+            user_id(:string, "Current User ID", format: :uuid)
+          end
+        end
+    }
+  end
 
   def clear_active(conn, _params) do
     with {:ok, results} <- Tokens.clear_active_and_release_histories() do
@@ -33,6 +50,17 @@ defmodule ExTokenManagerApiWeb.TokensController do
       |> put_status(:ok)
       |> render(:show, token: token)
     end
+  end
+
+  swagger_path :history do
+    get("/api/tokens/{id}/history")
+    summary("List the history of a token")
+
+    parameters do
+      id(:path, :string, "Token's UUID", required: true)
+    end
+
+    response(200, "OK", Schema.ref(:Token))
   end
 
   def history(conn, %{"id" => id}) do
