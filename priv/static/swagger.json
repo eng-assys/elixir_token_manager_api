@@ -1,0 +1,211 @@
+{
+  "info": {
+    "version": "1.0.0",
+    "title": "Token Manager API"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "TokenUsageHistory": {
+      "properties": {
+        "activated_at": {
+          "description": "Activation timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "description": "History record's id",
+          "example": 1,
+          "format": "id",
+          "type": "integer"
+        },
+        "released_at": {
+          "description": "Release timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "token_id": {
+          "description": "Associated Token's UUID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID who claimed the token",
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "title": "Token Usage History",
+      "type": "object"
+    },
+    "ClaimRequest": {
+      "properties": {
+        "user_id": {
+          "description": "Claimant User's UUID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id"
+      ],
+      "title": "Claim Request",
+      "type": "object"
+    },
+    "ClearResponse": {
+      "properties": {
+        "history_closed": {
+          "description": "Closed History records amount",
+          "type": "integer"
+        },
+        "tokens_affected": {
+          "description": "Reset Tokens amount",
+          "type": "integer"
+        }
+      },
+      "title": "Clear Response",
+      "type": "object"
+    },
+    "Token": {
+      "description": "A token to access an resource",
+      "properties": {
+        "current_user_id": {
+          "description": "Current User ID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "id": {
+          "description": "Token's UUID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "inserted_at": {
+          "description": "Insertion timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status (ACTIVE/AVAILABLE)",
+          "example": "ACTIVE",
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Last update timestamp",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "title": "Token",
+      "type": "object"
+    },
+    "TokenList": {
+      "items": {
+        "$ref": "#/definitions/Token"
+      },
+      "title": "Tokens List",
+      "type": "array"
+    },
+    "TokenUsageHistoryList": {
+      "items": {
+        "$ref": "#/definitions/TokenUsageHistory"
+      },
+      "title": "Tokens Usage History List",
+      "type": "array"
+    }
+  },
+  "paths": {
+    "/api/tokens": {
+      "get": {
+        "description": "Return a List of all registered tokens, with optional filtering by status",
+        "operationId": "ExTokenManagerApiWeb.TokensController.index",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TokenList"
+            }
+          }
+        },
+        "summary": "Listar All Tokens",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    },
+    "/api/tokens/claim": {
+      "post": {
+        "description": "Allocate a token available or recycle the oldest one if the limit is reached.",
+        "operationId": "ExTokenManagerApiWeb.TokensController.claim",
+        "parameters": [
+          {
+            "description": "User Data",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ClaimRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Token Claimed with success",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        },
+        "summary": "Claim a token",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    },
+    "/api/tokens/clear-active": {
+      "delete": {
+        "description": "Release all Active Tokens and close their usage history records.",
+        "operationId": "ExTokenManagerApiWeb.TokensController.clear_active",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tokens Cleared with success",
+            "schema": {
+              "$ref": "#/definitions/ClearResponse"
+            }
+          }
+        },
+        "summary": "Clear Active Tokens",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    },
+    "/api/tokens/{id}/history": {
+      "get": {
+        "description": "",
+        "operationId": "ExTokenManagerApiWeb.TokensController.history",
+        "parameters": [
+          {
+            "description": "Token's UUID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TokenUsageHistoryList"
+            }
+          }
+        },
+        "summary": "List the history of a token",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0"
+}

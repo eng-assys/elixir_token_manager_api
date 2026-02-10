@@ -9,6 +9,8 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+* Update Dependencies `mix deps.get`
+
 ## Learn more
 
 * Official website: https://www.phoenixframework.org/
@@ -27,4 +29,9 @@ mix ecto.migrate
 ## Running Seed
 ```bash
 mix run priv/repo/seeds.exs
+```
+
+## Compile Swagger docs
+```bash
+mix deps.compile phoenix_swagger
 ```
