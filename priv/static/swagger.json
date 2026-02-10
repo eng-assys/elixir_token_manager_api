@@ -112,6 +112,73 @@
     }
   },
   "paths": {
+    "/api/tokens": {
+      "get": {
+        "description": "Return a List of all registered tokens, with optional filtering by status",
+        "operationId": "ExTokenManagerApiWeb.TokensController.index",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TokenList"
+            }
+          }
+        },
+        "summary": "Listar All Tokens",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    },
+    "/api/tokens/claim": {
+      "post": {
+        "description": "Allocate a token available or recycle the oldest one if the limit is reached.",
+        "operationId": "ExTokenManagerApiWeb.TokensController.claim",
+        "parameters": [
+          {
+            "description": "User Data",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ClaimRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Token Claimed with success",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        },
+        "summary": "Claim a token",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    },
+    "/api/tokens/clear-active": {
+      "delete": {
+        "description": "Release all Active Tokens and close their usage history records.",
+        "operationId": "ExTokenManagerApiWeb.TokensController.clear_active",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tokens Cleared with success",
+            "schema": {
+              "$ref": "#/definitions/ClearResponse"
+            }
+          }
+        },
+        "summary": "Clear Active Tokens",
+        "tags": [
+          "Tokens"
+        ]
+      }
+    },
     "/api/tokens/{id}/history": {
       "get": {
         "description": "",

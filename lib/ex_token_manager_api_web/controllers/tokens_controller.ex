@@ -55,6 +55,16 @@ defmodule ExTokenManagerApiWeb.TokensController do
     }
   end
 
+  swagger_path :claim do
+    post "/api/tokens/claim"
+    summary "Claim a token"
+    description "Allocate a token available or recycle the oldest one if the limit is reached."
+    parameters do
+      body :body, Schema.ref(:ClaimRequest), "User Data", required: true
+    end
+    response 201, "Token Claimed with success", Schema.ref(:Token)
+  end
+
   def claim(conn, %{"user_id" => user_id}) do
     with {:ok, token} <- Tokens.claim(user_id) do
       conn
@@ -63,12 +73,26 @@ defmodule ExTokenManagerApiWeb.TokensController do
     end
   end
 
+  swagger_path :clear_active do
+    delete "/api/tokens/clear-active"
+    summary "Clear Active Tokens"
+    description "Release all Active Tokens and close their usage history records."
+    response 200, "Tokens Cleared with success", Schema.ref(:ClearResponse)
+  end
+
   def clear_active(conn, _params) do
     with {:ok, results} <- Tokens.clear_active_and_release_histories() do
       conn
       |> put_status(:ok)
       |> render(:clear_active, results: results)
     end
+  end
+
+  swagger_path :index do
+    get "/api/tokens"
+    summary "Listar All Tokens"
+    description "Return a List of all registered tokens, with optional filtering by status"
+    response 200, "OK", Schema.ref(:TokenList)
   end
 
   def index(conn, params) do
