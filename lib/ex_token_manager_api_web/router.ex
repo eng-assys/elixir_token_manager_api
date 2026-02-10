@@ -1,5 +1,6 @@
 defmodule ExTokenManagerApiWeb.Router do
   use ExTokenManagerApiWeb, :router
+  use PhoenixSwagger
 
   pipeline :api do
     plug :accepts, ["json"]
@@ -18,6 +19,21 @@ defmodule ExTokenManagerApiWeb.Router do
       get "/:id", TokensController, :show
       get "/:id/history", TokensController, :history
     end
+  end
+
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :ex_token_manager_api,
+      swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0.0",
+        title: "Token Manager API"
+      }
+    }
   end
 
   # Other scopes may use custom stacks.
