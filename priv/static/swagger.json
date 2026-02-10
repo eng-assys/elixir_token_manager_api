@@ -5,6 +5,38 @@
   },
   "host": "localhost:4000",
   "definitions": {
+    "Token": {
+      "description": "A token to access an resource",
+      "properties": {
+        "current_user_id": {
+          "description": "Current User ID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "id": {
+          "description": "Token's UUID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "inserted_at": {
+          "description": "Insertion timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status (ACTIVE/AVAILABLE)",
+          "example": "ACTIVE",
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Last update timestamp",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "title": "Token",
+      "type": "object"
+    },
     "TokenUsageHistory": {
       "properties": {
         "activated_at": {
@@ -62,38 +94,6 @@
         }
       },
       "title": "Clear Response",
-      "type": "object"
-    },
-    "Token": {
-      "description": "A token to access an resource",
-      "properties": {
-        "current_user_id": {
-          "description": "Current User ID",
-          "format": "uuid",
-          "type": "string"
-        },
-        "id": {
-          "description": "Token's UUID",
-          "format": "uuid",
-          "type": "string"
-        },
-        "inserted_at": {
-          "description": "Insertion timestamp",
-          "format": "date-time",
-          "type": "string"
-        },
-        "status": {
-          "description": "Status (ACTIVE/AVAILABLE)",
-          "example": "ACTIVE",
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Last update timestamp",
-          "format": "date-time",
-          "type": "string"
-        }
-      },
-      "title": "Token",
       "type": "object"
     },
     "TokenList": {
