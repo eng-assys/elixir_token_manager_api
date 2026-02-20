@@ -69,13 +69,6 @@
       "title": "Token Usage History",
       "type": "object"
     },
-    "TokenList": {
-      "items": {
-        "$ref": "#/definitions/Token"
-      },
-      "title": "Tokens List",
-      "type": "array"
-    },
     "ClaimRequest": {
       "properties": {
         "user_id": {
@@ -103,6 +96,13 @@
       },
       "title": "Clear Response",
       "type": "object"
+    },
+    "TokenList": {
+      "items": {
+        "$ref": "#/definitions/Token"
+      },
+      "title": "Tokens List",
+      "type": "array"
     },
     "TokenUsageHistoryList": {
       "items": {
